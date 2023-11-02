@@ -1,40 +1,37 @@
 const fs = require('fs');
 const archiver = require('archiver');
 
-// Zip oluşturulacak klasörün yolu
-const folderPath = 'folder';
 
-// Zip dosyasının adı ve yolu
+const folderPath = 'folder';
+``
+
 const outputFilePath = 'file.zip';
 
-// Archiver oluştur
+
 const archive = archiver('zip', {
-    zlib: { level: 9 } // Sıkıştırma seviyesi
+    zlib: { level: 9 }
 });
 
-// Çıkış dosyasını oluştur
 const output = fs.createWriteStream(outputFilePath);
 
-// Archiver'ı çıkış dosyasına yönlendir
+
 archive.pipe(output);
 
-// Klasörü ziplemek için dönüşümlü olarak gezin
 archive.directory(folderPath, false);
 
-// Ziplemeyi başlat
 archive.finalize();
 
 output.on('close', () => {
-    console.log('Klasör başarıyla zip dosyasına dönüştürüldü.');
+    console.log('Zipped .');
 });
 
 output.on('end', () => {
-    console.log('Zip işlemi tamamlandı.');
+    console.log('Done.');
 });
 
 archive.on('warning', (err) => {
     if (err.code === 'ENOENT') {
-        console.warn('Uyarı: Dosya veya klasör bulunamadı.', err);
+        console.warn('Warning: Folder Or File Cannot Find.', err);
     } else {
         throw err;
     }
